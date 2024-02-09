@@ -18,8 +18,8 @@ def cli():
     # fmt: off
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("audio", nargs="+", type=str, help="audio file(s) to transcribe")
-    parser.add_argument("--model", default="small", help="name of the Whisper model to use")
-    parser.add_argument("--model_dir", type=str, default=None, help="the path to save model files; uses ~/.cache/whisper by default")
+    # parser.add_argument("--model", default="small", help="name of the ReazonSpeech model to use")
+    parser.add_argument("--model_dir", type=str, default=None, help="the path to save model files; uses ~/.cache/reazonspeech by default")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu", help="device to use for PyTorch inference")
     parser.add_argument("--device_index", default=0, type=int, help="device index to use for FasterWhisper inference")
     parser.add_argument("--batch_size", default=8, type=int, help="the preferred batch size for inference")
@@ -134,10 +134,10 @@ def cli():
     else:
         temperature = [temperature]
 
-    faster_whisper_threads = 4
+    reazonspeech_threads = 4
     if (threads := args.pop("threads")) > 0:
         torch.set_num_threads(threads)
-        faster_whisper_threads = threads
+        reazonspeech_threads = threads
 
     asr_options = {
         "beam_size": args.pop("beam_size"),
@@ -162,12 +162,12 @@ def cli():
     if args["max_line_count"] and not args["max_line_width"]:
         warnings.warn("--max_line_count has no effect without --max_line_width")
     writer_args = {arg: args.pop(arg) for arg in word_options}
-    
+
     # Part 1: VAD & ASR Loop
     results = []
     tmp_results = []
     # model = load_model(model_name, device=device, download_root=model_dir)
-    model = load_model(model_name, device=device, device_index=device_index, download_root=model_dir, compute_type=compute_type, language=args['language'], asr_options=asr_options, vad_options={"vad_onset": vad_onset, "vad_offset": vad_offset}, task=task, threads=faster_whisper_threads)
+    model = load_model(model_name, device=device, device_index=device_index, download_root=model_dir, compute_type=compute_type, language=args['language'], asr_options=asr_options, vad_options={"vad_onset": vad_onset, "vad_offset": vad_offset}, task=task, threads=reazonspeech_threads)
 
     for audio_path in args.pop("audio"):
         audio = load_audio(audio_path)

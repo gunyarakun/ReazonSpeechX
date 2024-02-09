@@ -3,7 +3,7 @@ import warnings
 from typing import List, Union, Optional, NamedTuple
 
 import ctranslate2
-import faster_whisper
+from reazonspeech.nemo.asr import load_model, transcribe, audio_from_path
 import numpy as np
 import torch
 from transformers import Pipeline
@@ -203,7 +203,7 @@ class FasterWhisperPipeline(Pipeline):
                 self.tokenizer = faster_whisper.tokenizer.Tokenizer(self.model.hf_tokenizer,
                                                                     self.model.model.is_multilingual, task=task,
                                                                     language=language)
-                
+
         if self.suppress_numerals:
             previous_suppress_tokens = self.options.suppress_tokens
             numeral_symbol_tokens = find_numeral_symbol_tokens(self.tokenizer)

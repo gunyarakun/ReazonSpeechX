@@ -1,4 +1,4 @@
-include whisperx/assets/*
-include whisperx/assets/gpt2/*
-include whisperx/assets/multilingual/*
-include whisperx/normalizers/english.json
+include reazonspeechx/assets/*
+include reazonspeechx/assets/gpt2/*
+include reazonspeechx/assets/multilingual/*
+include reazonspeechx/normalizers/english.json
